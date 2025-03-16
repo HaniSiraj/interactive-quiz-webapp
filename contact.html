@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Contact Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <nav class="w-full bg-blue-500 p-4 text-white text-center text-xl font-bold">
+        <a href="index.html" class="mx-4">Home</a>
+        <a href="about.html" class="mx-4">About Us</a>
+        <a href="contact.html" class="mx-4">Contact Us</a>
+        <a href="quiz.html" class="mx-4">Take a Quiz</a>
+    </nav>
+    <div class="container mx-auto p-6">
+        <form id="contact-form" class="bg-white p-6 rounded shadow-lg">
+            <label class="block">Name</label>
+            <input type="text" id="name" class="w-full border p-2 mb-4" required>
+            <label class="block">Email</label>
+            <input type="email" id="email" class="w-full border p-2 mb-4" required>
+            <label class="block">Message</label>
+            <textarea id="message" class="w-full border p-2 mb-4" required></textarea>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Submit</button>
+        </form>
+        <p id="confirmation" class="hidden text-green-500">Message sent! The dummy meassage</p>
+    </div>
+    <script>
+        document.getElementById("contact-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            document.getElementById("confirmation").classList.remove("hidden");
+        });
+    </script>
+</body>
+</html>
