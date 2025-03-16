@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-200 font-sans">
+    <nav class="w-full bg-gray-800 p-4 text-green-400 text-xl font-bold flex justify-between items-center px-8 shadow-lg">
+        <span class="tracking-wider">FAST QUIZ</span>
+        <div class="space-x-6">
+            <a href="index.html" class="hover:text-blue-300 transition">Home</a>
+            <a href="quiz.html" class="hover:text-blue-300 transition">Quiz</a>
+            <a href="about.html" class="hover:text-blue-300 transition">About Us</a>
+            <a href="contact.html" class="hover:text-blue-300 transition">Contact Us</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6 mt-6 max-w-2xl bg-gray-800 shadow-lg rounded-lg text-center">
+        <h1 class="text-3xl font-bold text-green-400 mb-4">Select a Quiz</h1>
+
+        <label for="subject" class="block text-lg font-medium">Choose Subject:</label>
+        <select id="subject" class="bg-gray-700 text-white p-2 rounded w-full mt-2">
+            <option value="math">Math</option>
+            <option value="science">Science</option>
+            <option value="history">History</option>
+        </select>
+
+        <button id="start-btn" class="mt-4 bg-blue-500 text-white px-6 py-2 rounded shadow-md hover:bg-blue-400 transition">
+            Start Quiz
+        </button>
+
+        <div id="quiz-container" class="p-4 hidden">
+            <p id="question" class="text-xl font-semibold"></p>
+            <div id="options" class="mt-4 flex flex-col space-y-2"></div>
+            <p id="timer" class="mt-4 text-red-400 font-bold"></p>
+            <button id="next-btn" class="mt-4 bg-green-500 text-white px-6 py-2 rounded shadow-md hover:bg-green-400 transition hidden">
+                Next Question
+            </button>
+        </div>
+
+        <p id="result" class="hidden text-green-400 text-lg font-semibold mt-4"></p>
+    </div>
+
+    <footer class="w-full bg-gray-800 p-4 text-green-400 text-center mt-8 shadow-lg text-lg font-medium">
+        &copy; WP quiz website
+    </footer>
+
+    <script>
+        const quizData = {
+            math: [
+                { question: "What is 5 + 3?", options: ["5", "8", "10", "15"], answer: "8" },
+                { question: "What is 7 x 6?", options: ["36", "42", "49", "56"], answer: "42" }
+            ],
+            science: [
+                { question: "What is the chemical symbol for water?", options: ["H2O", "O2", "CO2", "HO"], answer: "H2O" },
+                { question: "What planet is known as the Red Planet?", options: ["Earth", "Mars", "Jupiter", "Venus"], answer: "Mars" }
+            ],
+            history: [
+                { question: "Who was the first President of the USA?", options: ["Abraham Lincoln", "Thomas Jefferson", "George Washington", "John Adams"], answer: "George Washington" },
+                { question: "In which year did World War II end?", options: ["1942", "1945", "1950", "1939"], answer: "1945" }
+            ]
+        };
+
+        let selectedSubject = "";
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+        let timeLeft = 15;
+        let selectedAnswer = null;
+
+        const subjectDropdown = document.getElementById("subject");
+        const startBtn = document.getElementById("start-btn");
+        const quizContainer = document.getElementById("quiz-container");
+        const questionText = document.getElementById("question");
+        const optionsContainer = document.getElementById("options");
+        const timerText = document.getElementById("timer");
+        const nextBtn = document.getElementById("next-btn");
+        const resultText = document.getElementById("result");
+
+        startBtn.addEventListener("click", () => {
+            selectedSubject = subjectDropdown.value;
+            quizContainer.classList.remove("hidden");
+            startBtn.classList.add("hidden");
+            subjectDropdown.disabled = true;
+            resultText.classList.add("hidden");
+            currentQuestionIndex = 0;
+            score = 0;
+            loadQuestion();
+        });
+
+        function loadQuestion() {
+            clearInterval(timer);
+            timeLeft = 15;
+            updateTimerDisplay();
+            timer = setInterval(updateTimer, 1000);
+
+            const questionData = quizData[selectedSubject][currentQuestionIndex];
+            questionText.innerText = questionData.question;
+
+            optionsContainer.innerHTML = "";
+            selectedAnswer = null;
+
+            questionData.options.forEach(option => {
+                const button = document.createElement("button");
+                button.innerText = option;
+                button.className = "w-full bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-600 transition";
+                button.onclick = () => selectAnswer(button, option);
+                optionsContainer.appendChild(button);
+            });
+
+            nextBtn.classList.add("hidden");
+        }
+
+        function selectAnswer(button, selectedOption) {
+            if (selectedAnswer) return;
+
+            selectedAnswer = selectedOption;
+
+            document.querySelectorAll("#options button").forEach(btn => {
+                btn.classList.remove("bg-blue-500");
+                btn.classList.add("bg-gray-700");
+            });
+
+            button.classList.add("bg-blue-500");
+            nextBtn.classList.remove("hidden");
+        }
+
+        function updateTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                updateTimerDisplay();
+            } else {
+                clearInterval(timer);
+                nextBtn.classList.remove("hidden");
+            }
+        }
+
+        function updateTimerDisplay() {
+            timerText.innerText = `Time Left: ${timeLeft}s`;
+        }
+
+        nextBtn.addEventListener("click", () => {
+            const questionData = quizData[selectedSubject][currentQuestionIndex];
+
+            document.querySelectorAll("#options button").forEach(btn => {
+                if (btn.innerText === questionData.answer) {
+                    btn.classList.add("bg-green-500");
+                } else if (btn.innerText === selectedAnswer) {
+                    btn.classList.add("bg-red-500");
+                }
+            });
+
+            if (selectedAnswer === questionData.answer) {
+                score++;
+            }
+
+            clearInterval(timer);
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+
+                if (currentQuestionIndex < quizData[selectedSubject].length) {
+                    loadQuestion();
+                } else {
+                    quizContainer.classList.add("hidden");
+                    resultText.classList.remove("hidden");
+                    resultText.innerText = `Quiz Completed! Your score: ${score}/${quizData[selectedSubject].length}`;
+                    subjectDropdown.disabled = false;
+                    startBtn.classList.remove("hidden");
+                }
+            }, 1500);
+        });
+    </script>
+</body>
+</html>

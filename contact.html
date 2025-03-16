@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Contact Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-200 font-sans">
+    <nav class="w-full bg-gray-800 p-4 text-green-400 text-xl font-bold flex justify-between items-center px-8 shadow-lg">
+        <span class="tracking-wider">FAST QUIZ</span>
+        <div class="space-x-6">
+            <a href="index.html" class="hover:text-blue-300 transition">Home</a>
+            <a href="quiz.html" class="hover:text-blue-300 transition">Quiz</a>
+            <a href="about.html" class="hover:text-blue-300 transition">About Us</a>
+            <a href="contact.html" class="hover:text-blue-300 transition">Contact Us</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6 mt-6 max-w-2xl bg-gray-800 shadow-lg rounded-lg">
+        <h1 class="text-3xl font-bold text-green-400 text-center mb-6">Contact Us</h1>
+        <form id="contact-form" class="p-6">
+            <label class="block mb-2 font-semibold">Name</label>
+            <input type="text" id="name" class="w-full bg-gray-700 border border-gray-600 text-white p-2 mb-4 rounded" required>
+
+            <label class="block mb-2 font-semibold">Email</label>
+            <input type="email" id="email" class="w-full bg-gray-700 border border-gray-600 text-white p-2 mb-4 rounded" required>
+
+            <label class="block mb-2 font-semibold">Message</label>
+            <textarea id="message" class="w-full bg-gray-700 border border-gray-600 text-white p-2 mb-4 rounded" required></textarea>
+
+            <button type="submit" class="w-full bg-green-500 text-white px-4 py-2 rounded shadow-md hover:bg-green-400 transition">Submit</button>
+        </form>
+        <p id="confirmation" class="hidden text-green-400 text-center mt-4">Message sent!</p>
+    </div>
+
+    <footer class="w-full bg-gray-800 p-4 text-green-400 text-center mt-8 shadow-lg text-lg font-medium">&copy; WP quiz website</footer>
+
+    <script>
+        document.getElementById("contact-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            document.getElementById("confirmation").classList.remove("hidden");
+        });
+    </script>
+</body>
+</html>
